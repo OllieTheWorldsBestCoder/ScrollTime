@@ -1,0 +1,617 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F000000000000001 /* ScrollTimeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000001 /* ScrollTimeApp.swift */; };
+		F000000000000002 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000002 /* AppDelegate.swift */; };
+		F000000000000010 /* DailyStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000010 /* DailyStats.swift */; };
+		F000000000000011 /* UserPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000011 /* UserPreferences.swift */; };
+		F000000000000012 /* UIScrollSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000012 /* UIScrollSession.swift */; };
+		F000000000000020 /* ScrollDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000020 /* ScrollDetector.swift */; };
+		F000000000000021 /* GestureAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000021 /* GestureAnalyzer.swift */; };
+		F000000000000022 /* DetectionConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000022 /* DetectionConfig.swift */; };
+		F000000000000023 /* ScrollSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000023 /* ScrollSession.swift */; };
+		F000000000000030 /* ScreenTimeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000030 /* ScreenTimeManager.swift */; };
+		F000000000000031 /* AppMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000031 /* AppMonitor.swift */; };
+		F000000000000032 /* TargetApps.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000032 /* TargetApps.swift */; };
+		F000000000000040 /* PowerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000040 /* PowerManager.swift */; };
+		F000000000000041 /* BackgroundTasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000041 /* BackgroundTasks.swift */; };
+		F000000000000050 /* InterventionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000050 /* InterventionManager.swift */; };
+		F000000000000051 /* InterventionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000051 /* InterventionType.swift */; };
+		F000000000000052 /* EscalationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000052 /* EscalationEngine.swift */; };
+		F000000000000060 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000060 /* DashboardView.swift */; };
+		F000000000000061 /* UsageStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000061 /* UsageStatsView.swift */; };
+		F000000000000070 /* InterventionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000070 /* InterventionView.swift */; };
+		F000000000000071 /* BreathingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000071 /* BreathingView.swift */; };
+		F000000000000072 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000072 /* TimerView.swift */; };
+		F000000000000073 /* FrictionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000073 /* FrictionView.swift */; };
+		F000000000000080 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000080 /* SettingsView.swift */; };
+		F000000000000081 /* AppSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000081 /* AppSelectionView.swift */; };
+		F000000000000082 /* SensitivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000082 /* SensitivityView.swift */; };
+		F000000000000090 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000090 /* OnboardingView.swift */; };
+		F0000000000000A0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1000000000000A0 /* Assets.xcassets */; };
+		F0000000000000D0 /* FamilyControls.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1000000000000D0 /* FamilyControls.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F0000000000000D1 /* DeviceActivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1000000000000D1 /* DeviceActivity.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F0000000000000D2 /* ManagedSettings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1000000000000D2 /* ManagedSettings.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F0000000000000E0 /* ScrollTimeTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000E0 /* ScrollTimeTheme.swift */; };
+		F0000000000000E1 /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000E1 /* SplashScreenView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		F100000000000001 /* ScrollTimeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollTimeApp.swift; sourceTree = "<group>"; };
+		F100000000000002 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F100000000000010 /* DailyStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyStats.swift; sourceTree = "<group>"; };
+		F100000000000011 /* UserPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPreferences.swift; sourceTree = "<group>"; };
+		F100000000000012 /* UIScrollSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIScrollSession.swift; sourceTree = "<group>"; };
+		F100000000000020 /* ScrollDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollDetector.swift; sourceTree = "<group>"; };
+		F100000000000021 /* GestureAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureAnalyzer.swift; sourceTree = "<group>"; };
+		F100000000000022 /* DetectionConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetectionConfig.swift; sourceTree = "<group>"; };
+		F100000000000023 /* ScrollSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollSession.swift; sourceTree = "<group>"; };
+		F100000000000030 /* ScreenTimeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTimeManager.swift; sourceTree = "<group>"; };
+		F100000000000031 /* AppMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMonitor.swift; sourceTree = "<group>"; };
+		F100000000000032 /* TargetApps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetApps.swift; sourceTree = "<group>"; };
+		F100000000000040 /* PowerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerManager.swift; sourceTree = "<group>"; };
+		F100000000000041 /* BackgroundTasks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTasks.swift; sourceTree = "<group>"; };
+		F100000000000050 /* InterventionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterventionManager.swift; sourceTree = "<group>"; };
+		F100000000000051 /* InterventionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterventionType.swift; sourceTree = "<group>"; };
+		F100000000000052 /* EscalationEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EscalationEngine.swift; sourceTree = "<group>"; };
+		F100000000000060 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		F100000000000061 /* UsageStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageStatsView.swift; sourceTree = "<group>"; };
+		F100000000000070 /* InterventionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterventionView.swift; sourceTree = "<group>"; };
+		F100000000000071 /* BreathingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathingView.swift; sourceTree = "<group>"; };
+		F100000000000072 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
+		F100000000000073 /* FrictionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrictionView.swift; sourceTree = "<group>"; };
+		F100000000000080 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F100000000000081 /* AppSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSelectionView.swift; sourceTree = "<group>"; };
+		F100000000000082 /* SensitivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensitivityView.swift; sourceTree = "<group>"; };
+		F100000000000090 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		F1000000000000A0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F1000000000000A1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F1000000000000B0 /* ScrollTimeMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollTimeMonitor.swift; sourceTree = "<group>"; };
+		F1000000000000B1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F1000000000000C0 /* ShieldConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShieldConfiguration.swift; sourceTree = "<group>"; };
+		F1000000000000C1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F1000000000000D0 /* FamilyControls.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FamilyControls.framework; path = System/Library/Frameworks/FamilyControls.framework; sourceTree = SDKROOT; };
+		F1000000000000D1 /* DeviceActivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DeviceActivity.framework; path = System/Library/Frameworks/DeviceActivity.framework; sourceTree = SDKROOT; };
+		F1000000000000D2 /* ManagedSettings.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ManagedSettings.framework; path = System/Library/Frameworks/ManagedSettings.framework; sourceTree = SDKROOT; };
+		F1000000000000E0 /* ScrollTimeTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollTimeTheme.swift; sourceTree = "<group>"; };
+		F1000000000000E1 /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
+		F1000000000000F0 /* ScrollTime.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ScrollTime.entitlements; sourceTree = "<group>"; };
+		F2000000000000E0 /* ScrollTime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScrollTime.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F2000000000000E1 /* ScrollTimeMonitor.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ScrollTimeMonitor.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		F2000000000000E2 /* ScrollTimeShield.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ScrollTimeShield.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F3000000000000E0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F0000000000000D0 /* FamilyControls.framework in Frameworks */,
+				F0000000000000D1 /* DeviceActivity.framework in Frameworks */,
+				F0000000000000D2 /* ManagedSettings.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F4000000000000E0 = {
+			isa = PBXGroup;
+			children = (
+				F4000000000000E1 /* ScrollTime */,
+				F4000000000000E2 /* ScrollTimeMonitor */,
+				F4000000000000E3 /* ScrollTimeShield */,
+				F4000000000000E4 /* Frameworks */,
+				F4000000000000E5 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F4000000000000E1 /* ScrollTime */ = {
+			isa = PBXGroup;
+			children = (
+				F4000000000000F0 /* App */,
+				F4000000000000F1 /* Core */,
+				F4000000000000F2 /* Views */,
+				F4000000000000F3 /* Models */,
+				F40000000000F204 /* Theme */,
+				F4000000000000F4 /* Resources */,
+				F1000000000000F0 /* ScrollTime.entitlements */,
+			);
+			path = ScrollTime;
+			sourceTree = "<group>";
+		};
+		F4000000000000E2 /* ScrollTimeMonitor */ = {
+			isa = PBXGroup;
+			children = (
+				F1000000000000B0 /* ScrollTimeMonitor.swift */,
+				F1000000000000B1 /* Info.plist */,
+			);
+			path = ScrollTimeMonitor;
+			sourceTree = "<group>";
+		};
+		F4000000000000E3 /* ScrollTimeShield */ = {
+			isa = PBXGroup;
+			children = (
+				F1000000000000C0 /* ShieldConfiguration.swift */,
+				F1000000000000C1 /* Info.plist */,
+			);
+			path = ScrollTimeShield;
+			sourceTree = "<group>";
+		};
+		F4000000000000E4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F1000000000000D0 /* FamilyControls.framework */,
+				F1000000000000D1 /* DeviceActivity.framework */,
+				F1000000000000D2 /* ManagedSettings.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F4000000000000E5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F2000000000000E0 /* ScrollTime.app */,
+				F2000000000000E1 /* ScrollTimeMonitor.appex */,
+				F2000000000000E2 /* ScrollTimeShield.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F4000000000000F0 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				F100000000000001 /* ScrollTimeApp.swift */,
+				F100000000000002 /* AppDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		F4000000000000F1 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				F40000000000F100 /* ScrollDetection */,
+				F40000000000F101 /* ScreenTime */,
+				F40000000000F102 /* Battery */,
+				F40000000000F103 /* Intervention */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		F4000000000000F2 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F40000000000F200 /* Dashboard */,
+				F40000000000F201 /* Intervention */,
+				F40000000000F202 /* Settings */,
+				F40000000000F203 /* Onboarding */,
+				F40000000000F205 /* SplashScreen */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F4000000000000F3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F100000000000010 /* DailyStats.swift */,
+				F100000000000011 /* UserPreferences.swift */,
+				F100000000000012 /* UIScrollSession.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F4000000000000F4 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F1000000000000A0 /* Assets.xcassets */,
+				F1000000000000A1 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		F40000000000F100 /* ScrollDetection */ = {
+			isa = PBXGroup;
+			children = (
+				F100000000000020 /* ScrollDetector.swift */,
+				F100000000000021 /* GestureAnalyzer.swift */,
+				F100000000000022 /* DetectionConfig.swift */,
+				F100000000000023 /* ScrollSession.swift */,
+			);
+			path = ScrollDetection;
+			sourceTree = "<group>";
+		};
+		F40000000000F101 /* ScreenTime */ = {
+			isa = PBXGroup;
+			children = (
+				F100000000000030 /* ScreenTimeManager.swift */,
+				F100000000000031 /* AppMonitor.swift */,
+				F100000000000032 /* TargetApps.swift */,
+			);
+			path = ScreenTime;
+			sourceTree = "<group>";
+		};
+		F40000000000F102 /* Battery */ = {
+			isa = PBXGroup;
+			children = (
+				F100000000000040 /* PowerManager.swift */,
+				F100000000000041 /* BackgroundTasks.swift */,
+			);
+			path = Battery;
+			sourceTree = "<group>";
+		};
+		F40000000000F103 /* Intervention */ = {
+			isa = PBXGroup;
+			children = (
+				F100000000000050 /* InterventionManager.swift */,
+				F100000000000051 /* InterventionType.swift */,
+				F100000000000052 /* EscalationEngine.swift */,
+			);
+			path = Intervention;
+			sourceTree = "<group>";
+		};
+		F40000000000F200 /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				F100000000000060 /* DashboardView.swift */,
+				F100000000000061 /* UsageStatsView.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		F40000000000F201 /* Intervention */ = {
+			isa = PBXGroup;
+			children = (
+				F100000000000070 /* InterventionView.swift */,
+				F100000000000071 /* BreathingView.swift */,
+				F100000000000072 /* TimerView.swift */,
+				F100000000000073 /* FrictionView.swift */,
+			);
+			path = Intervention;
+			sourceTree = "<group>";
+		};
+		F40000000000F202 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				F100000000000080 /* SettingsView.swift */,
+				F100000000000081 /* AppSelectionView.swift */,
+				F100000000000082 /* SensitivityView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		F40000000000F203 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				F100000000000090 /* OnboardingView.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		F40000000000F204 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				F1000000000000E0 /* ScrollTimeTheme.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		F40000000000F205 /* SplashScreen */ = {
+			isa = PBXGroup;
+			children = (
+				F1000000000000E1 /* SplashScreenView.swift */,
+			);
+			path = SplashScreen;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F5000000000000E0 /* ScrollTime */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F6000000000000E0 /* Build configuration list for PBXNativeTarget "ScrollTime" */;
+			buildPhases = (
+				F70000000000E0 /* Sources */,
+				F3000000000000E0 /* Frameworks */,
+				F80000000000E0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ScrollTime;
+			productName = ScrollTime;
+			productReference = F2000000000000E0 /* ScrollTime.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F9000000000000E0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					F5000000000000E0 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = FA000000000000E0 /* Build configuration list for PBXProject "ScrollTime" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F4000000000000E0;
+			productRefGroup = F4000000000000E5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F5000000000000E0 /* ScrollTime */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F80000000000E0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F0000000000000A0 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F70000000000E0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F000000000000001 /* ScrollTimeApp.swift in Sources */,
+				F000000000000002 /* AppDelegate.swift in Sources */,
+				F0000000000000E0 /* ScrollTimeTheme.swift in Sources */,
+				F0000000000000E1 /* SplashScreenView.swift in Sources */,
+				F000000000000010 /* DailyStats.swift in Sources */,
+				F000000000000011 /* UserPreferences.swift in Sources */,
+				F000000000000012 /* UIScrollSession.swift in Sources */,
+				F000000000000023 /* ScrollSession.swift in Sources */,
+				F000000000000020 /* ScrollDetector.swift in Sources */,
+				F000000000000021 /* GestureAnalyzer.swift in Sources */,
+				F000000000000022 /* DetectionConfig.swift in Sources */,
+				F000000000000030 /* ScreenTimeManager.swift in Sources */,
+				F000000000000031 /* AppMonitor.swift in Sources */,
+				F000000000000032 /* TargetApps.swift in Sources */,
+				F000000000000040 /* PowerManager.swift in Sources */,
+				F000000000000041 /* BackgroundTasks.swift in Sources */,
+				F000000000000050 /* InterventionManager.swift in Sources */,
+				F000000000000051 /* InterventionType.swift in Sources */,
+				F000000000000052 /* EscalationEngine.swift in Sources */,
+				F000000000000060 /* DashboardView.swift in Sources */,
+				F000000000000061 /* UsageStatsView.swift in Sources */,
+				F000000000000070 /* InterventionView.swift in Sources */,
+				F000000000000071 /* BreathingView.swift in Sources */,
+				F000000000000072 /* TimerView.swift in Sources */,
+				F000000000000073 /* FrictionView.swift in Sources */,
+				F000000000000080 /* SettingsView.swift in Sources */,
+				F000000000000081 /* AppSelectionView.swift in Sources */,
+				F000000000000082 /* SensitivityView.swift in Sources */,
+				F000000000000090 /* OnboardingView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		FB000000000000E0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		FB000000000000E1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FC000000000000E0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ScrollTime/ScrollTime.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9Y4X85AQD5;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ScrollTime/Resources/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.scrolltime-ollie.app";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FC000000000000E1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ScrollTime/ScrollTime.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9Y4X85AQD5;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ScrollTime/Resources/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.scrolltime-ollie.app";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F6000000000000E0 /* Build configuration list for PBXNativeTarget "ScrollTime" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FC000000000000E0 /* Debug */,
+				FC000000000000E1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FA000000000000E0 /* Build configuration list for PBXProject "ScrollTime" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FB000000000000E0 /* Debug */,
+				FB000000000000E1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F9000000000000E0 /* Project object */;
+}

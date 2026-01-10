@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- FamilyControls disabled for testing without paid developer account -->
+    <!-- To enable Screen Time monitoring, you need:
+         1. Paid Apple Developer Program membership
+         2. Request FamilyControls entitlement from Apple
+         3. Add: <key>com.apple.developer.family-controls</key><true/>
+    -->
+</dict>
+</plist>
