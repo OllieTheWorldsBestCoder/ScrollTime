@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 // MARK: - Redesigned Intervention View
 // Claude-inspired: calm, warm, inviting
@@ -10,6 +11,10 @@ struct InterventionView: View {
 
     @State private var appeared = false
     @State private var canSkip = false
+
+    // Haptic feedback generators
+    private let impactGenerator = UIImpactFeedbackGenerator(style: .medium)
+    private let notificationGenerator = UINotificationFeedbackGenerator()
 
     var body: some View {
         ZStack {
@@ -66,11 +71,19 @@ struct InterventionView: View {
             .padding(.horizontal, STSpacing.lg)
         }
         .onAppear {
+            // Prepare haptic feedback
+            impactGenerator.prepare()
+            notificationGenerator.prepare()
+
+            // Trigger initial haptic based on intervention type intensity
+            triggerHapticForInterventionType()
+
             withAnimation(.spring(response: 0.7, dampingFraction: 0.8).delay(0.1)) {
                 appeared = true
             }
-            // Enable skip after delay
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            // Enable skip after delay based on intervention type
+            let skipDelay: TimeInterval = interventionType.allowsQuickDismiss ? 1.5 : 3.0
+            DispatchQueue.main.asyncAfter(deadline: .now() + skipDelay) {
                 withAnimation(.easeOut(duration: 0.3)) {
                     canSkip = true
                 }
@@ -121,6 +134,18 @@ struct InterventionView: View {
     // MARK: - Completion Handler
 
     private func handleCompletion(result: InterventionResult) {
+        // Trigger completion haptic
+        switch result {
+        case .completed, .tookBreak:
+            notificationGenerator.notificationOccurred(.success)
+        case .skipped, .continuedScrolling:
+            // Subtle feedback for neutral actions
+            let lightImpact = UIImpactFeedbackGenerator(style: .light)
+            lightImpact.impactOccurred()
+        case .timedOut:
+            notificationGenerator.notificationOccurred(.warning)
+        }
+
         withAnimation(.easeOut(duration: 0.3)) {
             appeared = false
         }
@@ -128,6 +153,27 @@ struct InterventionView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             onComplete(result)
             dismiss()
+        }
+    }
+
+    // MARK: - Haptic Feedback
+
+    private func triggerHapticForInterventionType() {
+        // Map intervention intensity to haptic feedback style
+        // Higher intensity interventions get firmer haptics
+        let intensity = interventionType.hapticIntensity
+
+        if intensity < 0.4 {
+            // Gentle reminder - soft tap
+            let lightImpact = UIImpactFeedbackGenerator(style: .light)
+            lightImpact.impactOccurred(intensity: intensity)
+        } else if intensity < 0.6 {
+            // Breathing/timed pause - medium tap
+            impactGenerator.impactOccurred(intensity: intensity)
+        } else {
+            // Friction dialog - firmer attention-getting tap
+            let heavyImpact = UIImpactFeedbackGenerator(style: .heavy)
+            heavyImpact.impactOccurred(intensity: min(intensity, 0.8))
         }
     }
 }
@@ -318,6 +364,7 @@ private struct TimedPauseContent: View {
 
     @State private var timeRemaining = 30
     @State private var isRunning = false
+    @State private var isComplete = false
     @State private var timer: Timer?
 
     var body: some View {
@@ -336,29 +383,61 @@ private struct TimedPauseContent: View {
                     .animation(.linear(duration: 1), value: timeRemaining)
 
                 VStack(spacing: STSpacing.xxs) {
-                    Text("\(timeRemaining)")
-                        .font(.system(size: 48, weight: .light, design: .serif))
-                        .foregroundColor(STColors.textPrimary)
+                    if isComplete {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.system(size: 48))
+                            .foregroundColor(STColors.success)
+                    } else {
+                        Text("\(timeRemaining)")
+                            .font(.system(size: 48, weight: .light, design: .serif))
+                            .foregroundColor(STColors.textPrimary)
 
-                    Text("seconds")
-                        .font(STTypography.bodySmall())
-                        .foregroundColor(STColors.textTertiary)
+                        Text("seconds")
+                            .font(STTypography.bodySmall())
+                            .foregroundColor(STColors.textTertiary)
+                    }
                 }
             }
 
             // Message
-            Text(isRunning ? "Take a moment to pause\nand breathe" : "A brief pause to\nreset your mind")
+            Text(messageText)
                 .font(STTypography.bodyLarge())
                 .foregroundColor(STColors.textSecondary)
                 .multilineTextAlignment(.center)
 
-            // Action
-            if !isRunning {
+            // Action buttons
+            if !isRunning && !isComplete {
                 Button("Start Pause") {
                     startTimer()
                 }
                 .buttonStyle(STPrimaryButtonStyle())
+            } else if isComplete {
+                VStack(spacing: STSpacing.sm) {
+                    Button("Take a Break") {
+                        onComplete(.tookBreak)
+                    }
+                    .buttonStyle(STPrimaryButtonStyle())
+
+                    Button("Continue Scrolling") {
+                        onComplete(.continuedScrolling)
+                    }
+                    .font(STTypography.bodySmall())
+                    .foregroundColor(STColors.textSecondary)
+                }
             }
+        }
+        .onDisappear {
+            stopTimer()
+        }
+    }
+
+    private var messageText: String {
+        if !isRunning && !isComplete {
+            return "A brief pause to\nreset your mind"
+        } else if isRunning {
+            return "Take a moment to pause\nand breathe"
+        } else {
+            return "Great job taking\na moment to pause"
         }
     }
 
@@ -368,10 +447,19 @@ private struct TimedPauseContent: View {
             if timeRemaining > 0 {
                 timeRemaining -= 1
             } else {
-                timer?.invalidate()
-                onComplete(.completed)
+                stopTimer()
+                withAnimation {
+                    isRunning = false
+                    isComplete = true
+                }
+                // Note: Do NOT auto-call onComplete - let user choose their action
             }
         }
+    }
+
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
     }
 }
 

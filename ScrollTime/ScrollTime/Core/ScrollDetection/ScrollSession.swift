@@ -320,6 +320,14 @@ public final class ScrollSession: ObservableObject, Identifiable, Codable {
         return last.timestamp.timeIntervalSince(secondLast.timestamp)
     }
 
+    /// Time elapsed since the last scroll event until now.
+    /// This is useful for detecting meaningful pauses (e.g., reading content).
+    /// Returns nil if there are no events.
+    public var timeSinceLastScroll: TimeInterval? {
+        guard let lastEvent = recentEvents.last else { return nil }
+        return Date().timeIntervalSince(lastEvent.timestamp)
+    }
+
     /// Average time between scrolls in the recent window
     public var averageScrollInterval: TimeInterval? {
         guard recentEvents.count >= 2 else { return nil }

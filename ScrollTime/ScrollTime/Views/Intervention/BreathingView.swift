@@ -165,7 +165,8 @@ struct BreathingView: View {
                 withAnimation {
                     breathPhase = .complete
                 }
-                onComplete(.completed)
+                // Note: Do NOT auto-call onComplete here - let user choose their action
+                // The user will tap either "I'm Done Scrolling" or "Continue Scrolling"
             }
         }
     }

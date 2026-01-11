@@ -9,13 +9,39 @@
 /* Begin PBXBuildFile section */
 		F000000000000001 /* ScrollTimeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000001 /* ScrollTimeApp.swift */; };
 		F000000000000002 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000002 /* AppDelegate.swift */; };
+		F0000000000000F1 /* DemoScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000F1 /* DemoScrollView.swift */; };
+		F0000000000000F2 /* SessionHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000F2 /* SessionHistoryView.swift */; };
+		F0000000000000F3 /* SessionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000000000000F3 /* SessionRowView.swift */; };
+		F000000000000W01 /* WindDownManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000W01 /* WindDownManager.swift */; };
+		F000000000000W02 /* WindDownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000W02 /* WindDownView.swift */; };
+		F000000000000W03 /* IntentionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000W03 /* IntentionManager.swift */; };
+		F000000000000M01 /* DailyIntention.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000M01 /* DailyIntention.swift */; };
+		F000000000000M02 /* EveningReflection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000M02 /* EveningReflection.swift */; };
+		F000000000000M03 /* WindDownSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000M03 /* WindDownSettings.swift */; };
+		F000000000000M04 /* WeeklyReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000M04 /* WeeklyReport.swift */; };
+		F000000000000M05 /* MindfulStreak.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000M05 /* MindfulStreak.swift */; };
+		F000000000000M06 /* Milestone.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000M06 /* Milestone.swift */; };
+		F000000000000M07 /* Insight.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000M07 /* Insight.swift */; };
+		F000000000000A01 /* ReportGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000A01 /* ReportGenerator.swift */; };
+		F000000000000A02 /* PatternAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000A02 /* PatternAnalyzer.swift */; };
+		F000000000000A03 /* MilestoneTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000A03 /* MilestoneTracker.swift */; };
+		F000000000000V01 /* WeeklyReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000V01 /* WeeklyReportView.swift */; };
+		F000000000000V02 /* InsightCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000V02 /* InsightCardView.swift */; };
+		F000000000000V03 /* MilestoneCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000V03 /* MilestoneCelebrationView.swift */; };
+		F000000000000S01 /* ScrollDetectionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000S01 /* ScrollDetectionCoordinator.swift */; };
 		F000000000000010 /* DailyStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000010 /* DailyStats.swift */; };
 		F000000000000011 /* UserPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000011 /* UserPreferences.swift */; };
 		F000000000000012 /* UIScrollSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000012 /* UIScrollSession.swift */; };
+		F000000000000013 /* PersistedScrollSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000013 /* PersistedScrollSession.swift */; };
+		F000000000000054 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000054 /* DataManager.swift */; };
+		F000000000000055 /* ScrollDetector+Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000055 /* ScrollDetector+Persistence.swift */; };
+		F000000000000056 /* StatsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000056 /* StatsProvider.swift */; };
 		F000000000000020 /* ScrollDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000020 /* ScrollDetector.swift */; };
 		F000000000000021 /* GestureAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000021 /* GestureAnalyzer.swift */; };
 		F000000000000022 /* DetectionConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000022 /* DetectionConfig.swift */; };
 		F000000000000023 /* ScrollSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000023 /* ScrollSession.swift */; };
+		F000000000000024 /* VelocityTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000024 /* VelocityTracker.swift */; };
+		F000000000000025 /* DoomScrollingHeuristics.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000025 /* DoomScrollingHeuristics.swift */; };
 		F000000000000030 /* ScreenTimeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000030 /* ScreenTimeManager.swift */; };
 		F000000000000031 /* AppMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000031 /* AppMonitor.swift */; };
 		F000000000000032 /* TargetApps.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000032 /* TargetApps.swift */; };
@@ -24,12 +50,14 @@
 		F000000000000050 /* InterventionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000050 /* InterventionManager.swift */; };
 		F000000000000051 /* InterventionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000051 /* InterventionType.swift */; };
 		F000000000000052 /* EscalationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000052 /* EscalationEngine.swift */; };
+		F000000000000053 /* InterventionTriggerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000053 /* InterventionTriggerService.swift */; };
 		F000000000000060 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000060 /* DashboardView.swift */; };
 		F000000000000061 /* UsageStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000061 /* UsageStatsView.swift */; };
 		F000000000000070 /* InterventionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000070 /* InterventionView.swift */; };
 		F000000000000071 /* BreathingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000071 /* BreathingView.swift */; };
 		F000000000000072 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000072 /* TimerView.swift */; };
 		F000000000000073 /* FrictionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000073 /* FrictionView.swift */; };
+		F000000000000074 /* GentleReminderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000074 /* GentleReminderView.swift */; };
 		F000000000000080 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000080 /* SettingsView.swift */; };
 		F000000000000081 /* AppSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000081 /* AppSelectionView.swift */; };
 		F000000000000082 /* SensitivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F100000000000082 /* SensitivityView.swift */; };
@@ -48,10 +76,13 @@
 		F100000000000010 /* DailyStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyStats.swift; sourceTree = "<group>"; };
 		F100000000000011 /* UserPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPreferences.swift; sourceTree = "<group>"; };
 		F100000000000012 /* UIScrollSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIScrollSession.swift; sourceTree = "<group>"; };
+		F100000000000013 /* PersistedScrollSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedScrollSession.swift; sourceTree = "<group>"; };
 		F100000000000020 /* ScrollDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollDetector.swift; sourceTree = "<group>"; };
 		F100000000000021 /* GestureAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureAnalyzer.swift; sourceTree = "<group>"; };
 		F100000000000022 /* DetectionConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetectionConfig.swift; sourceTree = "<group>"; };
 		F100000000000023 /* ScrollSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollSession.swift; sourceTree = "<group>"; };
+		F100000000000024 /* VelocityTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VelocityTracker.swift; sourceTree = "<group>"; };
+		F100000000000025 /* DoomScrollingHeuristics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoomScrollingHeuristics.swift; sourceTree = "<group>"; };
 		F100000000000030 /* ScreenTimeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTimeManager.swift; sourceTree = "<group>"; };
 		F100000000000031 /* AppMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMonitor.swift; sourceTree = "<group>"; };
 		F100000000000032 /* TargetApps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetApps.swift; sourceTree = "<group>"; };
@@ -60,12 +91,17 @@
 		F100000000000050 /* InterventionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterventionManager.swift; sourceTree = "<group>"; };
 		F100000000000051 /* InterventionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterventionType.swift; sourceTree = "<group>"; };
 		F100000000000052 /* EscalationEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EscalationEngine.swift; sourceTree = "<group>"; };
+		F100000000000053 /* InterventionTriggerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterventionTriggerService.swift; sourceTree = "<group>"; };
+		F100000000000054 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		F100000000000055 /* ScrollDetector+Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScrollDetector+Persistence.swift"; sourceTree = "<group>"; };
+		F100000000000056 /* StatsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsProvider.swift; sourceTree = "<group>"; };
 		F100000000000060 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		F100000000000061 /* UsageStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageStatsView.swift; sourceTree = "<group>"; };
 		F100000000000070 /* InterventionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterventionView.swift; sourceTree = "<group>"; };
 		F100000000000071 /* BreathingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreathingView.swift; sourceTree = "<group>"; };
 		F100000000000072 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		F100000000000073 /* FrictionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrictionView.swift; sourceTree = "<group>"; };
+		F100000000000074 /* GentleReminderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GentleReminderView.swift; sourceTree = "<group>"; };
 		F100000000000080 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F100000000000081 /* AppSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSelectionView.swift; sourceTree = "<group>"; };
 		F100000000000082 /* SensitivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensitivityView.swift; sourceTree = "<group>"; };
@@ -82,6 +118,26 @@
 		F1000000000000E0 /* ScrollTimeTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollTimeTheme.swift; sourceTree = "<group>"; };
 		F1000000000000E1 /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		F1000000000000F0 /* ScrollTime.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ScrollTime.entitlements; sourceTree = "<group>"; };
+		F1000000000000F1 /* DemoScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoScrollView.swift; sourceTree = "<group>"; };
+		F1000000000000F2 /* SessionHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionHistoryView.swift; sourceTree = "<group>"; };
+		F1000000000000F3 /* SessionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionRowView.swift; sourceTree = "<group>"; };
+		F100000000000W01 /* WindDownManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindDownManager.swift; sourceTree = "<group>"; };
+		F100000000000W02 /* WindDownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindDownView.swift; sourceTree = "<group>"; };
+		F100000000000W03 /* IntentionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentionManager.swift; sourceTree = "<group>"; };
+		F100000000000M01 /* DailyIntention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyIntention.swift; sourceTree = "<group>"; };
+		F100000000000M02 /* EveningReflection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EveningReflection.swift; sourceTree = "<group>"; };
+		F100000000000M03 /* WindDownSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindDownSettings.swift; sourceTree = "<group>"; };
+		F100000000000M04 /* WeeklyReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyReport.swift; sourceTree = "<group>"; };
+		F100000000000M05 /* MindfulStreak.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MindfulStreak.swift; sourceTree = "<group>"; };
+		F100000000000M06 /* Milestone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Milestone.swift; sourceTree = "<group>"; };
+		F100000000000M07 /* Insight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Insight.swift; sourceTree = "<group>"; };
+		F100000000000A01 /* ReportGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportGenerator.swift; sourceTree = "<group>"; };
+		F100000000000A02 /* PatternAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatternAnalyzer.swift; sourceTree = "<group>"; };
+		F100000000000A03 /* MilestoneTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MilestoneTracker.swift; sourceTree = "<group>"; };
+		F100000000000V01 /* WeeklyReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyReportView.swift; sourceTree = "<group>"; };
+		F100000000000V02 /* InsightCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightCardView.swift; sourceTree = "<group>"; };
+		F100000000000V03 /* MilestoneCelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MilestoneCelebrationView.swift; sourceTree = "<group>"; };
+		F100000000000S01 /* ScrollDetectionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollDetectionCoordinator.swift; sourceTree = "<group>"; };
 		F2000000000000E0 /* ScrollTime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ScrollTime.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2000000000000E1 /* ScrollTimeMonitor.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ScrollTimeMonitor.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2000000000000E2 /* ScrollTimeShield.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ScrollTimeShield.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -180,6 +236,9 @@
 				F40000000000F101 /* ScreenTime */,
 				F40000000000F102 /* Battery */,
 				F40000000000F103 /* Intervention */,
+				F40000000000F104 /* Persistence */,
+				F40000000000F105 /* Analytics */,
+				F40000000000F106 /* Wellness */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -188,10 +247,14 @@
 			isa = PBXGroup;
 			children = (
 				F40000000000F200 /* Dashboard */,
+				F40000000000F206 /* Demo */,
+				F40000000000F207 /* Insights */,
 				F40000000000F201 /* Intervention */,
 				F40000000000F202 /* Settings */,
 				F40000000000F203 /* Onboarding */,
 				F40000000000F205 /* SplashScreen */,
+				F40000000000F208 /* Wellness */,
+				F40000000000F209 /* Celebration */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -202,6 +265,14 @@
 				F100000000000010 /* DailyStats.swift */,
 				F100000000000011 /* UserPreferences.swift */,
 				F100000000000012 /* UIScrollSession.swift */,
+				F100000000000013 /* PersistedScrollSession.swift */,
+				F100000000000M01 /* DailyIntention.swift */,
+				F100000000000M02 /* EveningReflection.swift */,
+				F100000000000M03 /* WindDownSettings.swift */,
+				F100000000000M04 /* WeeklyReport.swift */,
+				F100000000000M05 /* MindfulStreak.swift */,
+				F100000000000M06 /* Milestone.swift */,
+				F100000000000M07 /* Insight.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -222,6 +293,9 @@
 				F100000000000021 /* GestureAnalyzer.swift */,
 				F100000000000022 /* DetectionConfig.swift */,
 				F100000000000023 /* ScrollSession.swift */,
+				F100000000000024 /* VelocityTracker.swift */,
+				F100000000000025 /* DoomScrollingHeuristics.swift */,
+				F100000000000S01 /* ScrollDetectionCoordinator.swift */,
 			);
 			path = ScrollDetection;
 			sourceTree = "<group>";
@@ -251,8 +325,19 @@
 				F100000000000050 /* InterventionManager.swift */,
 				F100000000000051 /* InterventionType.swift */,
 				F100000000000052 /* EscalationEngine.swift */,
+				F100000000000053 /* InterventionTriggerService.swift */,
 			);
 			path = Intervention;
+			sourceTree = "<group>";
+		};
+		F40000000000F104 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				F100000000000054 /* DataManager.swift */,
+				F100000000000055 /* ScrollDetector+Persistence.swift */,
+				F100000000000056 /* StatsProvider.swift */,
+			);
+			path = Persistence;
 			sourceTree = "<group>";
 		};
 		F40000000000F200 /* Dashboard */ = {
@@ -271,6 +356,7 @@
 				F100000000000071 /* BreathingView.swift */,
 				F100000000000072 /* TimerView.swift */,
 				F100000000000073 /* FrictionView.swift */,
+				F100000000000074 /* GentleReminderView.swift */,
 			);
 			path = Intervention;
 			sourceTree = "<group>";
@@ -307,6 +393,60 @@
 				F1000000000000E1 /* SplashScreenView.swift */,
 			);
 			path = SplashScreen;
+			sourceTree = "<group>";
+		};
+		F40000000000F206 /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				F1000000000000F1 /* DemoScrollView.swift */,
+			);
+			path = Demo;
+			sourceTree = "<group>";
+		};
+		F40000000000F207 /* Insights */ = {
+			isa = PBXGroup;
+			children = (
+				F1000000000000F2 /* SessionHistoryView.swift */,
+				F1000000000000F3 /* SessionRowView.swift */,
+				F100000000000V01 /* WeeklyReportView.swift */,
+				F100000000000V02 /* InsightCardView.swift */,
+			);
+			path = Insights;
+			sourceTree = "<group>";
+		};
+		F40000000000F208 /* Wellness */ = {
+			isa = PBXGroup;
+			children = (
+				F100000000000W02 /* WindDownView.swift */,
+			);
+			path = Wellness;
+			sourceTree = "<group>";
+		};
+		F40000000000F209 /* Celebration */ = {
+			isa = PBXGroup;
+			children = (
+				F100000000000V03 /* MilestoneCelebrationView.swift */,
+			);
+			path = Celebration;
+			sourceTree = "<group>";
+		};
+		F40000000000F105 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				F100000000000A01 /* ReportGenerator.swift */,
+				F100000000000A02 /* PatternAnalyzer.swift */,
+				F100000000000A03 /* MilestoneTracker.swift */,
+			);
+			path = Analytics;
+			sourceTree = "<group>";
+		};
+		F40000000000F106 /* Wellness */ = {
+			isa = PBXGroup;
+			children = (
+				F100000000000W01 /* WindDownManager.swift */,
+				F100000000000W03 /* IntentionManager.swift */,
+			);
+			path = Wellness;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -385,10 +525,13 @@
 				F000000000000010 /* DailyStats.swift in Sources */,
 				F000000000000011 /* UserPreferences.swift in Sources */,
 				F000000000000012 /* UIScrollSession.swift in Sources */,
+				F000000000000013 /* PersistedScrollSession.swift in Sources */,
 				F000000000000023 /* ScrollSession.swift in Sources */,
 				F000000000000020 /* ScrollDetector.swift in Sources */,
 				F000000000000021 /* GestureAnalyzer.swift in Sources */,
 				F000000000000022 /* DetectionConfig.swift in Sources */,
+				F000000000000024 /* VelocityTracker.swift in Sources */,
+				F000000000000025 /* DoomScrollingHeuristics.swift in Sources */,
 				F000000000000030 /* ScreenTimeManager.swift in Sources */,
 				F000000000000031 /* AppMonitor.swift in Sources */,
 				F000000000000032 /* TargetApps.swift in Sources */,
@@ -397,16 +540,41 @@
 				F000000000000050 /* InterventionManager.swift in Sources */,
 				F000000000000051 /* InterventionType.swift in Sources */,
 				F000000000000052 /* EscalationEngine.swift in Sources */,
+				F000000000000053 /* InterventionTriggerService.swift in Sources */,
+				F000000000000054 /* DataManager.swift in Sources */,
+				F000000000000055 /* ScrollDetector+Persistence.swift in Sources */,
+				F000000000000056 /* StatsProvider.swift in Sources */,
 				F000000000000060 /* DashboardView.swift in Sources */,
 				F000000000000061 /* UsageStatsView.swift in Sources */,
 				F000000000000070 /* InterventionView.swift in Sources */,
 				F000000000000071 /* BreathingView.swift in Sources */,
 				F000000000000072 /* TimerView.swift in Sources */,
 				F000000000000073 /* FrictionView.swift in Sources */,
+				F000000000000074 /* GentleReminderView.swift in Sources */,
 				F000000000000080 /* SettingsView.swift in Sources */,
 				F000000000000081 /* AppSelectionView.swift in Sources */,
 				F000000000000082 /* SensitivityView.swift in Sources */,
 				F000000000000090 /* OnboardingView.swift in Sources */,
+				F0000000000000F1 /* DemoScrollView.swift in Sources */,
+				F0000000000000F2 /* SessionHistoryView.swift in Sources */,
+				F0000000000000F3 /* SessionRowView.swift in Sources */,
+				F000000000000W01 /* WindDownManager.swift in Sources */,
+				F000000000000W02 /* WindDownView.swift in Sources */,
+				F000000000000W03 /* IntentionManager.swift in Sources */,
+				F000000000000M01 /* DailyIntention.swift in Sources */,
+				F000000000000M02 /* EveningReflection.swift in Sources */,
+				F000000000000M03 /* WindDownSettings.swift in Sources */,
+				F000000000000M04 /* WeeklyReport.swift in Sources */,
+				F000000000000M05 /* MindfulStreak.swift in Sources */,
+				F000000000000M06 /* Milestone.swift in Sources */,
+				F000000000000M07 /* Insight.swift in Sources */,
+				F000000000000A01 /* ReportGenerator.swift in Sources */,
+				F000000000000A02 /* PatternAnalyzer.swift in Sources */,
+				F000000000000A03 /* MilestoneTracker.swift in Sources */,
+				F000000000000V01 /* WeeklyReportView.swift in Sources */,
+				F000000000000V02 /* InsightCardView.swift in Sources */,
+				F000000000000V03 /* MilestoneCelebrationView.swift in Sources */,
+				F000000000000S01 /* ScrollDetectionCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

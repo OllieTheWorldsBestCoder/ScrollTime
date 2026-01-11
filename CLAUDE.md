@@ -119,6 +119,7 @@ This project uses specialized agents for parallel development. Invoke them via t
 | `ios-habit-intervention` | Intervention UX, breathing exercises, behavioral psychology |
 | `ios-screentime-api` | FamilyControls, DeviceActivity, Shield configuration |
 | `ios-swiftui` | Views, navigation, state management, animations |
+| `ios-build-deploy` | Build verification, bug checking, TestFlight deployment |
 
 ### When to Use Each Agent
 
@@ -127,6 +128,7 @@ This project uses specialized agents for parallel development. Invoke them via t
 - **Designing intervention UI** → `ios-habit-intervention`
 - **Screen Time integration** → `ios-screentime-api`
 - **Any SwiftUI view work** → `ios-swiftui`
+- **Deploying to TestFlight** → `ios-build-deploy`
 
 ## Key Technical Decisions
 
@@ -200,6 +202,32 @@ done
 <key>com.apple.developer.family-controls</key>
 <true/>
 ```
+
+## TestFlight Deployment
+
+### One-Command Deploy
+```bash
+cd /Users/momentumadmin/Desktop/ScrollTime/ScrollTime
+security unlock-keychain ~/Library/Keychains/login.keychain-db  # Prompts for macOS password
+./deploy.sh
+```
+
+### What deploy.sh Does
+1. Cleans previous build
+2. Archives for App Store
+3. Uploads to App Store Connect
+4. Auto-distributes to internal testers
+
+### Pre-Deploy Checklist (handled by `ios-build-deploy` agent)
+- Clean build succeeds
+- No duplicate Swift files (causes type conflicts)
+- Archive builds without errors
+- Recent bug fixes verified
+
+### After Deploy
+- Processing takes ~5 minutes
+- TestFlight notification sent automatically
+- Check status: https://appstoreconnect.apple.com/apps
 
 ## Testing Checklist
 

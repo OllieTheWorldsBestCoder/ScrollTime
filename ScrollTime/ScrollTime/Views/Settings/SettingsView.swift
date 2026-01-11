@@ -6,7 +6,13 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = SettingsViewModel()
+    @StateObject private var intentionManager = IntentionManager.shared
+    @StateObject private var windDownManager = WindDownManager.shared
     @State private var showingResetConfirmation = false
+    @State private var showWindDownSettings = false
+    @AppStorage("morningCheckInEnabled") private var morningCheckInEnabled = true
+    @AppStorage("eveningReflectionEnabled") private var eveningReflectionEnabled = true
+    @AppStorage("notificationsEnabled") private var notificationsEnabled = true
 
     var body: some View {
         NavigationStack {
@@ -23,6 +29,9 @@ struct SettingsView: View {
 
                         // Goals section
                         goalsSection
+
+                        // Wellness section
+                        wellnessSection
 
                         // About section
                         aboutSection
@@ -174,6 +183,74 @@ struct SettingsView: View {
                 unit: "min"
             )
         }
+    }
+
+    // MARK: - Wellness Section
+
+    private var wellnessSection: some View {
+        SettingsSection(title: "Wellness") {
+            VStack(spacing: 0) {
+                // Morning check-in toggle
+                SettingsToggleRow(
+                    icon: "sun.horizon",
+                    title: "Morning Check-in",
+                    subtitle: "Set your daily intention each morning",
+                    isOn: $morningCheckInEnabled
+                )
+
+                STDivider()
+                    .padding(.leading, 52)
+
+                // Evening reflection toggle
+                SettingsToggleRow(
+                    icon: "moon.stars",
+                    title: "Evening Reflection",
+                    subtitle: "Reflect on your day before bed",
+                    isOn: $eveningReflectionEnabled
+                )
+
+                STDivider()
+                    .padding(.leading, 52)
+
+                // Wind-down mode navigation
+                Button {
+                    showWindDownSettings = true
+                } label: {
+                    SettingsNavigationRow(
+                        icon: "moon.fill",
+                        title: "Wind-Down Mode",
+                        value: windDownStatusValue
+                    )
+                }
+
+                STDivider()
+                    .padding(.leading, 52)
+
+                // Notifications toggle
+                SettingsToggleRow(
+                    icon: "bell",
+                    title: "Notifications",
+                    subtitle: "Receive wellness reminders",
+                    isOn: $notificationsEnabled
+                )
+            }
+        }
+        .sheet(isPresented: $showWindDownSettings) {
+            WindDownSettingsView()
+        }
+    }
+
+    /// Computed property for wind-down status display value
+    private var windDownStatusValue: String {
+        if !windDownManager.settings.isEnabled {
+            return "Off"
+        }
+
+        if windDownManager.isInWindDownMode {
+            return "Active"
+        }
+
+        return windDownManager.settings.periodDescription
     }
 
     // MARK: - About Section

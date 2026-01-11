@@ -85,3 +85,6 @@ Scripts/
 # Environment
 .env
 .env.*
+
+# Claude Code (contains sensitive agent configs)
+.claude/

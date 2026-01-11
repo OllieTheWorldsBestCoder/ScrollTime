@@ -19,7 +19,7 @@ import SwiftUI
 /// Represents different types of interventions, ordered from gentlest to firmest.
 /// Each intervention is designed to interrupt automatic scrolling behavior while
 /// maintaining user trust and autonomy.
-enum InterventionType: Int, CaseIterable, Codable, Identifiable {
+public enum InterventionType: Int, CaseIterable, Codable, Identifiable, Sendable {
     /// A subtle, easily dismissable awareness prompt
     /// Behavioral principle: Simple awareness can disrupt automatic behavior
     case gentleReminder = 0
@@ -36,7 +36,7 @@ enum InterventionType: Int, CaseIterable, Codable, Identifiable {
     /// Behavioral principle: Cognitive friction engages the prefrontal cortex
     case frictionDialog = 3
 
-    var id: Int { rawValue }
+    public var id: Int { rawValue }
 
     // MARK: - Display Properties
 
@@ -200,7 +200,7 @@ struct InterventionConfiguration: Codable, Equatable {
 // MARK: - Intervention Result
 
 /// Represents the outcome of an intervention
-enum InterventionResult: Codable, Equatable {
+public enum InterventionResult: Codable, Equatable, Sendable {
     /// User completed the full intervention (breathing, timer, etc.)
     case completed
 
@@ -217,7 +217,7 @@ enum InterventionResult: Codable, Equatable {
     case timedOut
 
     /// Whether this result indicates the user engaged positively
-    var wasPositiveEngagement: Bool {
+    public var wasPositiveEngagement: Bool {
         switch self {
         case .completed, .tookBreak:
             return true
@@ -227,7 +227,7 @@ enum InterventionResult: Codable, Equatable {
     }
 
     /// Whether this result should reset the escalation level
-    var shouldResetEscalation: Bool {
+    public var shouldResetEscalation: Bool {
         switch self {
         case .completed, .tookBreak:
             return true

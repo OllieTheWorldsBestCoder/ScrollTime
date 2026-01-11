@@ -8,6 +8,7 @@ struct TimerView: View {
     @State private var timeRemaining: Int = 30
     @State private var isRunning = false
     @State private var isComplete = false
+    @State private var timer: Timer?
 
     private let totalTime = 30
 
@@ -110,6 +111,9 @@ struct TimerView: View {
             .padding(.horizontal)
         }
         .padding()
+        .onDisappear {
+            stopTimer()
+        }
     }
 
     private var statusText: String {
@@ -125,20 +129,27 @@ struct TimerView: View {
     private func startTimer() {
         isRunning = true
 
-        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [self] _ in
             if timeRemaining > 0 {
                 withAnimation {
                     timeRemaining -= 1
                 }
             } else {
-                timer.invalidate()
+                timer?.invalidate()
+                timer = nil
                 withAnimation(.spring(response: 0.5)) {
                     isRunning = false
                     isComplete = true
                 }
-                onComplete(.completed)
+                // Note: Do NOT auto-call onComplete here - let user choose their action
+                // The user will tap either "I'm Done Scrolling" or "Continue Scrolling"
             }
         }
+    }
+
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
     }
 }
 

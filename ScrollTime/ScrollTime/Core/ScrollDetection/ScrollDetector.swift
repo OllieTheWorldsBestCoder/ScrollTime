@@ -6,10 +6,18 @@
 //  Coordinates scroll session tracking, gesture analysis, and intervention triggering.
 //  Uses Combine for reactive updates and is designed for battery efficiency.
 //
+//  Battery Optimization Notes:
+//  - Uses DispatchSourceTimer with generous leeway for system coalescing
+//  - Consolidates multiple timers into a single analysis timer
+//  - Integrates with PowerManager for adaptive behavior
+//  - Pauses all timers when app is backgrounded or no scrolling detected
+//  - Respects Low Power Mode and thermal state
+//
 
 import Foundation
 import UIKit
 import Combine
+import os.log
 
 // MARK: - Detection Event
 
@@ -38,6 +46,9 @@ public enum DetectionEvent {
 
     /// Session metrics updated
     case metricsUpdated(SessionMetrics)
+
+    /// Monitoring state changed
+    case monitoringStateChanged(isMonitoring: Bool, reason: String)
 }
 
 // MARK: - Session Metrics
@@ -85,6 +96,14 @@ private struct InterventionState {
 /// Main detection engine that coordinates all scroll detection functionality.
 /// This class is the primary interface for the scroll detection system.
 ///
+/// Battery Optimization Features:
+/// - Uses DispatchSourceTimer with 30% leeway for system coalescing
+/// - Consolidates analysis and pause detection into single timer
+/// - Suspends timer when no active scrolling detected
+/// - Integrates with PowerManager for adaptive intervals
+/// - Responds to app lifecycle events (scenePhase)
+/// - Respects Low Power Mode and thermal state
+///
 /// Usage:
 /// ```swift
 /// let detector = ScrollDetector(config: .default)
@@ -127,12 +146,16 @@ public final class ScrollDetector: ObservableObject {
     /// Whether doom scrolling is currently detected
     @Published public private(set) var isDoomScrollingDetected: Bool = false
 
+    /// Current power mode from PowerManager
+    @Published public private(set) var currentPowerMode: PowerMode = .balanced
+
     // MARK: - Configuration
 
     /// Detection configuration (thresholds, sensitivity, etc.)
     public var config: DetectionConfig {
         didSet {
             gestureAnalyzer.config = config
+            updateTimerConfiguration()
         }
     }
 
@@ -146,6 +169,8 @@ public final class ScrollDetector: ObservableObject {
 
     // MARK: - Private Components
 
+    private let logger = Logger(subsystem: "com.scrolltime", category: "ScrollDetector")
+
     /// Gesture analyzer for pattern recognition
     private let gestureAnalyzer: GestureAnalyzer
 
@@ -155,11 +180,17 @@ public final class ScrollDetector: ObservableObject {
     /// Intervention timing state
     private var interventionState = InterventionState()
 
-    /// Timer for periodic intensity analysis
-    private var analysisTimer: Timer?
+    /// Consolidated analysis timer (DispatchSourceTimer for battery efficiency)
+    private var analysisTimer: DispatchSourceTimer?
 
-    /// Analysis interval in seconds
-    private let analysisInterval: TimeInterval = 1.0
+    /// Queue for timer operations (background QoS for battery efficiency)
+    private let timerQueue: DispatchQueue
+
+    /// Base analysis interval in seconds (adjusted by power mode)
+    private let baseAnalysisInterval: TimeInterval = 2.0
+
+    /// Whether the analysis timer is currently active
+    private var isTimerActive: Bool = false
 
     /// Combine cancellables
     private var cancellables = Set<AnyCancellable>()
@@ -167,29 +198,17 @@ public final class ScrollDetector: ObservableObject {
     /// Thread-safe lock
     private let lock = NSLock()
 
-    /// Pause detection timer
-    private var pauseTimer: Timer?
-
     /// Last scroll event timestamp
     private var lastScrollTime: Date?
+
+    /// Time since last scroll before suspending timer
+    private let scrollIdleTimeout: TimeInterval = 10.0
 
     /// Bundle ID of app being monitored
     private var monitoredAppBundleID: String?
 
-    // MARK: - Battery Optimization
-
-    /// Whether the device is in low power mode
-    private var isLowPowerMode: Bool {
-        ProcessInfo.processInfo.isLowPowerModeEnabled
-    }
-
-    /// Adjusted analysis interval based on power mode
-    private var adjustedAnalysisInterval: TimeInterval {
-        if isLowPowerMode {
-            return analysisInterval * config.lowPowerModeReductionFactor
-        }
-        return analysisInterval
-    }
+    /// Whether the app is currently in the foreground
+    private var isAppActive: Bool = true
 
     // MARK: - Initialization
 
@@ -200,15 +219,40 @@ public final class ScrollDetector: ObservableObject {
         self.config = config
         self.gestureAnalyzer = GestureAnalyzer(config: config)
 
+        // Create a dedicated queue for timer operations with background QoS
+        // This allows the system to defer timer operations when under power pressure
+        self.timerQueue = DispatchQueue(
+            label: "com.scrolltime.scrolldetector.timer",
+            qos: .utility  // Use .utility for battery-friendly background work
+        )
+
         setupObservers()
+        logger.info("ScrollDetector initialized with battery-optimized configuration")
     }
 
-    /// Sets up internal observers
+    deinit {
+        stopAnalysisTimer()
+    }
+
+    /// Sets up internal observers for power state and intensity updates
     private func setupObservers() {
-        // Observe low power mode changes
-        NotificationCenter.default.publisher(for: .NSProcessInfoPowerStateDidChange)
-            .sink { [weak self] _ in
-                self?.handlePowerStateChange()
+        // Observe power mode changes from PowerManager
+        Task { @MainActor in
+            PowerManager.shared.$currentMode
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] newMode in
+                    self?.handlePowerModeChange(newMode)
+                }
+                .store(in: &cancellables)
+        }
+
+        // Observe power mode change notifications (for non-Combine consumers)
+        NotificationCenter.default.publisher(for: .powerModeDidChange)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] notification in
+                if let newMode = notification.userInfo?["newMode"] as? PowerMode {
+                    self?.handlePowerModeChange(newMode)
+                }
             }
             .store(in: &cancellables)
 
@@ -232,6 +276,15 @@ public final class ScrollDetector: ObservableObject {
 
         guard !isMonitoring else { return }
 
+        // Check if PowerManager allows monitoring
+        Task { @MainActor in
+            guard PowerManager.shared.shouldMonitor else {
+                logger.info("Monitoring not started - power mode is suspended")
+                eventPublisher.send(.monitoringStateChanged(isMonitoring: false, reason: "Power mode suspended"))
+                return
+            }
+        }
+
         monitoredAppBundleID = appBundleID
 
         // Create a new session
@@ -242,14 +295,14 @@ public final class ScrollDetector: ObservableObject {
         currentSession = session
         isMonitoring = true
 
+        logger.info("Started monitoring for app: \(appBundleID ?? "unknown")")
+
         // Publish session started event
         eventPublisher.send(.sessionStarted(session))
+        eventPublisher.send(.monitoringStateChanged(isMonitoring: true, reason: "User initiated"))
 
-        // Start periodic analysis
-        startAnalysisTimer()
-
-        // Start pause detection
-        startPauseDetection()
+        // Timer will be started when first scroll event is received
+        // This avoids unnecessary CPU wake-ups when user is not scrolling
     }
 
     /// Stops monitoring and ends the current session.
@@ -259,9 +312,10 @@ public final class ScrollDetector: ObservableObject {
 
         guard isMonitoring else { return }
 
-        // Stop timers
+        logger.info("Stopping monitoring")
+
+        // Stop timer
         stopAnalysisTimer()
-        stopPauseDetection()
 
         // End the current session
         if let session = currentSession {
@@ -290,17 +344,26 @@ public final class ScrollDetector: ObservableObject {
         currentSession = nil
         isMonitoring = false
         isDoomScrollingDetected = false
+        lastScrollTime = nil
         gestureAnalyzer.reset()
+
+        eventPublisher.send(.monitoringStateChanged(isMonitoring: false, reason: "User stopped"))
     }
 
     /// Pauses monitoring temporarily (e.g., when app goes to background)
+    /// This is critical for battery efficiency - timers are suspended.
     public func pauseMonitoring() {
         lock.lock()
         defer { lock.unlock() }
 
+        guard isMonitoring else { return }
+
+        isAppActive = false
         currentSession?.pause()
-        stopAnalysisTimer()
-        stopPauseDetection()
+        suspendAnalysisTimer()
+
+        logger.info("Monitoring paused - app backgrounded")
+        eventPublisher.send(.monitoringStateChanged(isMonitoring: true, reason: "Paused - app backgrounded"))
     }
 
     /// Resumes monitoring after a pause
@@ -310,8 +373,27 @@ public final class ScrollDetector: ObservableObject {
 
         guard isMonitoring, currentSession?.state == .paused else { return }
 
-        startAnalysisTimer()
-        startPauseDetection()
+        isAppActive = true
+
+        // Only resume timer if we were recently scrolling
+        // Otherwise wait for next scroll event
+        if let lastScroll = lastScrollTime,
+           Date().timeIntervalSince(lastScroll) < scrollIdleTimeout {
+            resumeAnalysisTimer()
+        }
+
+        logger.info("Monitoring resumed")
+        eventPublisher.send(.monitoringStateChanged(isMonitoring: true, reason: "Resumed - app foregrounded"))
+    }
+
+    /// Called when app scene phase changes
+    /// - Parameter isActive: Whether the app is now active
+    public func handleScenePhaseChange(isActive: Bool) {
+        if isActive {
+            resumeMonitoring()
+        } else {
+            pauseMonitoring()
+        }
     }
 
     // MARK: - Gesture Processing
@@ -324,8 +406,7 @@ public final class ScrollDetector: ObservableObject {
         guard isMonitoring, let session = currentSession else { return }
 
         if let event = gestureAnalyzer.processPanGesture(recognizer, session: session) {
-            lastScrollTime = Date()
-            scrollEventPublisher.send(event)
+            handleScrollEvent(event)
         }
     }
 
@@ -343,8 +424,7 @@ public final class ScrollDetector: ObservableObject {
             direction: direction,
             session: session
         ) {
-            lastScrollTime = Date()
-            scrollEventPublisher.send(event)
+            handleScrollEvent(event)
         }
     }
 
@@ -361,16 +441,164 @@ public final class ScrollDetector: ObservableObject {
             predictedEndTranslation: predictedEndTranslation,
             session: session
         ) {
-            lastScrollTime = Date()
-            scrollEventPublisher.send(event)
+            handleScrollEvent(event)
         }
     }
 
-    // MARK: - Analysis
+    /// Common handler for all scroll events
+    private func handleScrollEvent(_ event: ScrollEvent) {
+        lastScrollTime = Date()
+        scrollEventPublisher.send(event)
+
+        // Start or resume the analysis timer when we receive scroll events
+        ensureAnalysisTimerRunning()
+    }
+
+    // MARK: - Timer Management (Battery Optimized)
+
+    /// Creates and configures the analysis timer with power-aware settings
+    private func createAnalysisTimer() {
+        // Cancel any existing timer
+        stopAnalysisTimer()
+
+        // Use cached power mode to avoid deadlock (it's updated via subscription)
+        let powerMode = currentPowerMode
+
+        // Calculate interval based on power mode
+        let interval = calculateAnalysisInterval(for: powerMode)
+        let leeway = calculateTimerLeeway(for: interval)
+
+        logger.debug("Creating analysis timer: interval=\(interval)s, leeway=\(leeway)s")
+
+        // Create DispatchSourceTimer for better battery efficiency than Timer
+        let timer = DispatchSource.makeTimerSource(queue: timerQueue)
+
+        // Schedule with generous leeway to allow system coalescing
+        // This is CRITICAL for battery efficiency - allows system to batch timer firings
+        timer.schedule(
+            deadline: .now() + interval,
+            repeating: interval,
+            leeway: .milliseconds(Int(leeway * 1000))
+        )
+
+        timer.setEventHandler { [weak self] in
+            self?.performConsolidatedAnalysis()
+        }
+
+        analysisTimer = timer
+        timer.resume()
+        isTimerActive = true
+    }
+
+    /// Calculates the analysis interval based on power mode
+    private func calculateAnalysisInterval(for powerMode: PowerMode) -> TimeInterval {
+        let baseInterval = baseAnalysisInterval
+
+        switch powerMode {
+        case .full:
+            return baseInterval  // 2 seconds
+        case .balanced:
+            return baseInterval * 1.5  // 3 seconds
+        case .reduced:
+            return baseInterval * 2.5  // 5 seconds
+        case .minimal:
+            return baseInterval * 5.0  // 10 seconds
+        case .suspended:
+            return .infinity  // Don't run
+        }
+    }
+
+    /// Calculates timer leeway (30% of interval for good coalescing)
+    private func calculateTimerLeeway(for interval: TimeInterval) -> TimeInterval {
+        // 30% leeway allows excellent system coalescing
+        // This significantly reduces CPU wake-ups
+        return interval * 0.3
+    }
+
+    /// Ensures the analysis timer is running (starts if needed)
+    private func ensureAnalysisTimerRunning() {
+        guard isMonitoring, isAppActive else { return }
+
+        if analysisTimer == nil || !isTimerActive {
+            createAnalysisTimer()
+        }
+    }
+
+    /// Suspends the analysis timer (but keeps it configured)
+    private func suspendAnalysisTimer() {
+        guard let timer = analysisTimer, isTimerActive else { return }
+        timer.suspend()
+        isTimerActive = false
+        logger.debug("Analysis timer suspended")
+    }
+
+    /// Resumes a suspended analysis timer
+    private func resumeAnalysisTimer() {
+        guard let timer = analysisTimer, !isTimerActive else {
+            // Timer doesn't exist, create it
+            createAnalysisTimer()
+            return
+        }
+        timer.resume()
+        isTimerActive = true
+        logger.debug("Analysis timer resumed")
+    }
+
+    /// Stops and releases the analysis timer
+    private func stopAnalysisTimer() {
+        if let timer = analysisTimer {
+            if !isTimerActive {
+                // Must resume before cancelling a suspended timer
+                timer.resume()
+            }
+            timer.cancel()
+            analysisTimer = nil
+            isTimerActive = false
+            logger.debug("Analysis timer stopped")
+        }
+    }
+
+    /// Updates timer configuration when power mode or config changes
+    private func updateTimerConfiguration() {
+        guard isMonitoring, isTimerActive else { return }
+
+        // Recreate timer with new configuration
+        createAnalysisTimer()
+    }
+
+    // MARK: - Analysis (Consolidated)
+
+    /// Performs consolidated analysis including intensity calculation and pause detection.
+    /// This replaces the separate analysis and pause timers for better battery efficiency.
+    private func performConsolidatedAnalysis() {
+        // Check if we should suspend due to scroll inactivity
+        if let lastScroll = lastScrollTime {
+            let idleTime = Date().timeIntervalSince(lastScroll)
+            if idleTime >= scrollIdleTimeout {
+                // User hasn't scrolled in a while - suspend timer to save battery
+                DispatchQueue.main.async { [weak self] in
+                    self?.suspendAnalysisTimer()
+                    self?.logger.debug("Timer suspended due to scroll inactivity (\(idleTime)s)")
+                }
+                return
+            }
+
+            // Check for pause (user stopped scrolling but timer still active)
+            if idleTime >= config.pauseBreakThreshold {
+                DispatchQueue.main.async { [weak self] in
+                    self?.eventPublisher.send(.pauseDetected(idleTime))
+                }
+            }
+        }
+
+        // Perform intensity analysis on main thread
+        DispatchQueue.main.async { [weak self] in
+            self?.performIntensityAnalysis()
+        }
+    }
 
     /// Performs intensity analysis and checks for intervention triggers.
-    /// Called periodically by the analysis timer.
-    private func performAnalysis() {
+    private func performIntensityAnalysis() {
         guard let session = currentSession, session.state == .active else { return }
 
         // Calculate current intensity
@@ -471,73 +699,39 @@ public final class ScrollDetector: ObservableObject {
         return true
     }
 
-    // MARK: - Timers
+    // MARK: - Power State Handling
 
-    /// Starts the periodic analysis timer
-    private func startAnalysisTimer() {
-        stopAnalysisTimer()
+    /// Handles power mode changes from PowerManager
+    private func handlePowerModeChange(_ newMode: PowerMode) {
+        let oldMode = currentPowerMode
+        currentPowerMode = newMode
 
-        let interval = adjustedAnalysisInterval
-        analysisTimer = Timer.scheduledTimer(
-            withTimeInterval: interval,
-            repeats: true
-        ) { [weak self] _ in
-            self?.performAnalysis()
+        logger.info("Power mode changed: \(oldMode.description) -> \(newMode.description)")
+
+        // Handle suspended mode
+        if newMode == .suspended {
+            if isMonitoring {
+                logger.info("Suspending monitoring due to power mode")
+                suspendAnalysisTimer()
+                eventPublisher.send(.monitoringStateChanged(
+                    isMonitoring: true,
+                    reason: "Paused - \(newMode.description) power mode"
+                ))
+            }
+            return
         }
 
-        // Allow timer to fire in common run loop modes (for smooth scrolling)
-        if let timer = analysisTimer {
-            RunLoop.current.add(timer, forMode: .common)
+        // If transitioning from suspended, check if we should resume
+        if oldMode == .suspended && isMonitoring && isAppActive {
+            logger.info("Resuming monitoring after power mode change")
+            if lastScrollTime != nil {
+                resumeAnalysisTimer()
+            }
         }
-    }
 
-    /// Stops the analysis timer
-    private func stopAnalysisTimer() {
-        analysisTimer?.invalidate()
-        analysisTimer = nil
-    }
-
-    /// Starts pause detection timer
-    private func startPauseDetection() {
-        stopPauseDetection()
-
-        // Check for pauses every second
-        pauseTimer = Timer.scheduledTimer(
-            withTimeInterval: 1.0,
-            repeats: true
-        ) { [weak self] _ in
-            self?.checkForPause()
-        }
-    }
-
-    /// Stops pause detection timer
-    private func stopPauseDetection() {
-        pauseTimer?.invalidate()
-        pauseTimer = nil
-    }
-
-    /// Checks if the user has paused scrolling
-    private func checkForPause() {
-        guard let lastScroll = lastScrollTime else { return }
-
-        let pauseDuration = Date().timeIntervalSince(lastScroll)
-
-        if pauseDuration >= config.pauseBreakThreshold {
-            // User has paused - they might be reading content
-            eventPublisher.send(.pauseDetected(pauseDuration))
-
-            // Reset pause detection (only fire once per pause)
-            lastScrollTime = nil
-        }
-    }
-
-    // MARK: - Power State
-
-    /// Handles power state changes (low power mode)
-    private func handlePowerStateChange() {
-        if isMonitoring {
-            // Restart timer with adjusted interval
-            startAnalysisTimer()
+        // Update timer interval for new power mode
+        if isMonitoring && isTimerActive {
+            updateTimerConfiguration()
         }
     }
 
@@ -608,6 +802,8 @@ public final class ScrollDetector: ObservableObject {
         sessionHistory.removeAll()
         interventionState.reset()
         metrics = .empty
+
+        logger.info("ScrollDetector reset")
     }
 
     /// Resets only intervention cooldowns (allows interventions to fire again)
@@ -630,13 +826,15 @@ extension ScrollDetector {
         """
         ScrollDetector State:
         - Monitoring: \(isMonitoring)
+        - Timer Active: \(isTimerActive)
         - Session: \(currentSession?.id.uuidString ?? "none")
         - Session Duration: \(String(format: "%.1f", currentSession?.duration ?? 0))s
         - Total Scrolls: \(currentSession?.totalScrollCount ?? 0)
         - Intensity: \(String(format: "%.2f", currentIntensity?.score ?? 0))
         - Doom Scrolling: \(isDoomScrollingDetected)
-        - Low Power Mode: \(isLowPowerMode)
+        - Power Mode: \(currentPowerMode.description)
         - Interventions Today: \(interventionState.interventionCount)
+        - App Active: \(isAppActive)
         """
     }
 
@@ -660,5 +858,22 @@ extension ScrollDetector {
                 self?.simulateScroll(velocity: baseVelocity + variance, direction: .down)
             }
         }
+    }
+
+    /// Returns battery efficiency diagnostics
+    public var batteryDiagnostics: String {
+        let interval = calculateAnalysisInterval(for: currentPowerMode)
+        let leeway = calculateTimerLeeway(for: interval)
+
+        return """
+        Battery Efficiency Diagnostics:
+        - Power Mode: \(currentPowerMode.description)
+        - Analysis Interval: \(String(format: "%.1f", interval))s
+        - Timer Leeway: \(String(format: "%.1f", leeway))s (allows coalescing)
+        - Timer Active: \(isTimerActive)
+        - Timer Type: DispatchSourceTimer (battery optimized)
+        - Queue QoS: utility (battery friendly)
+        - Idle Timeout: \(scrollIdleTimeout)s (suspends when inactive)
+        """
     }
 }

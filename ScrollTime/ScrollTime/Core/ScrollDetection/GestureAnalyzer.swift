@@ -104,10 +104,154 @@ public final class GestureAnalyzer: ObservableObject {
     /// Thread-safe lock for mutable state
     private let lock = NSLock()
 
+    // MARK: - Intensity Modifier State (Lightweight - O(1) operations)
+
+    /// Last time a scroll event was recorded (for decay calculation)
+    private var lastScrollEventTime: Date?
+
+    /// Count of reading pauses (gaps > 2 seconds) in current session
+    private var readingPauseCount: Int = 0
+
+    /// Last event time for detecting reading pauses
+    private var lastEventTimeForPause: Date?
+
     // MARK: - Initialization
 
     public init(config: DetectionConfig = .default) {
         self.config = config
+    }
+
+    // MARK: - Modifier Reset
+
+    /// Resets the intensity modifier tracking state. Call when starting a new session.
+    public func resetModifierState() {
+        lock.lock()
+        defer { lock.unlock() }
+        lastScrollEventTime = nil
+        readingPauseCount = 0
+        lastEventTimeForPause = nil
+    }
+
+    // MARK: - Modifier Tracking
+
+    /// Updates modifier tracking state when a scroll event is recorded.
+    /// This is called automatically by processScroll methods.
+    /// All operations are O(1) for battery efficiency.
+    private func updateModifierTracking(timestamp: Date) {
+        // Check for reading pause (gap > 2 seconds indicates reading)
+        // Must be less than pauseBreakThreshold to not be a session break
+        if let lastTime = lastEventTimeForPause {
+            let gap = timestamp.timeIntervalSince(lastTime)
+            if gap > 2.0 && gap < config.pauseBreakThreshold {
+                readingPauseCount += 1
+            }
+        }
+
+        lastEventTimeForPause = timestamp
+        lastScrollEventTime = timestamp
+    }
+
+    // MARK: - Intensity Modifiers (All O(1) Operations)
+
+    /// Calculates decay modifier based on time since last scroll.
+    /// Reduces intensity when user slows down or pauses briefly.
+    /// Returns 0.5-1.0 where 1.0 = active scrolling, 0.5 = slowed/paused.
+    private func calculateDecayModifier() -> Double {
+        guard let lastTime = lastScrollEventTime else { return 1.0 }
+
+        let secondsSinceLastScroll = Date().timeIntervalSince(lastTime)
+
+        // Decay starts after 1 second, reaches minimum at 3 seconds
+        if secondsSinceLastScroll < 1.0 {
+            return 1.0
+        } else if secondsSinceLastScroll > 3.0 {
+            return 0.5
+        } else {
+            // Linear decay from 1.0 to 0.5 over 2 seconds
+            return 1.0 - (secondsSinceLastScroll - 1.0) * 0.25
+        }
+    }
+
+    /// Calculates reading modifier based on detected reading pauses.
+    /// When user pauses to read content, they're engaging not doom scrolling.
+    /// Returns 0.7-1.0 where 1.0 = no reading, 0.7 = significant reading detected.
+    private func calculateReadingModifier() -> Double {
+        // Each reading pause reduces intensity (user is engaging with content)
+        // Max effect at 5+ pauses = 30% reduction
+        let effectivePauses = min(readingPauseCount, 5)
+        return 1.0 - (Double(effectivePauses) * 0.06)  // 6% reduction per pause
+    }
+
+    /// Calculates warmup modifier for session start.
+    /// Prevents false positives in first 30 seconds while patterns establish.
+    /// Returns 0.3-1.0 where 0.3 = just started, 1.0 = past warmup period.
+    private func calculateWarmupModifier(sessionDuration: TimeInterval) -> Double {
+        let warmupPeriod: TimeInterval = 30.0
+
+        if sessionDuration >= warmupPeriod {
+            return 1.0
+        }
+
+        // Quadratic ease-in: starts at 0.3, reaches 1.0 at warmup period
+        let progress = sessionDuration / warmupPeriod
+        return 0.3 + (0.7 * progress * progress)
+    }
+
+    /// Calculates depth modifier based on scroll density (scrolls per second).
+    /// High density = surface skimming = likely doom scrolling
+    /// Low density = engaged browsing = likely not doom scrolling
+    /// Returns 0.8-1.2 where < 1.0 reduces intensity, > 1.0 increases it.
+    private func calculateDepthModifier(session: ScrollSession) -> Double {
+        let scrollCount = session.totalScrollCount
+        let duration = session.duration
+
+        guard duration > 0 else { return 1.0 }
+
+        let scrollDensity = Double(scrollCount) / duration
+
+        // >2 scrolls/sec = surface skimming = increase intensity
+        // <0.5 scrolls/sec = engaged browsing = decrease intensity
+        if scrollDensity > 2.0 {
+            return 1.2
+        } else if scrollDensity < 0.5 {
+            return 0.8
+        } else {
+            // Linear interpolation between 0.8 and 1.2
+            return 0.8 + (scrollDensity - 0.5) * 0.267
+        }
+    }
+
+    /// Calculates late-night modifier to increase sensitivity after 10pm.
+    /// Late-night scrolling is often less intentional and more habitual.
+    /// Returns 1.0-1.3 where 1.0 = daytime, 1.3 = peak late-night sensitivity.
+    private func calculateLateNightModifier() -> Double {
+        let hour = Calendar.current.component(.hour, from: Date())
+
+        switch hour {
+        case 22: return 1.1   // 10pm: 10% increase
+        case 23: return 1.2   // 11pm: 20% increase
+        case 0:  return 1.3   // Midnight: 30% increase (peak)
+        case 1:  return 1.25  // 1am: 25% increase
+        case 2:  return 1.15  // 2am: 15% increase
+        default: return 1.0   // Daytime: no change
+        }
+    }
+
+    /// Combines all intensity modifiers into a single multiplier.
+    /// Clamps result to 0.3-1.5 range for reasonable bounds.
+    private func calculateCombinedModifier(session: ScrollSession) -> Double {
+        lock.lock()
+        defer { lock.unlock() }
+
+        let decay = calculateDecayModifier()
+        let reading = calculateReadingModifier()
+        let warmup = calculateWarmupModifier(sessionDuration: session.duration)
+        let depth = calculateDepthModifier(session: session)
+        let lateNight = calculateLateNightModifier()
+
+        // Multiplicative combination, clamped to reasonable range
+        let combined = decay * reading * warmup * depth * lateNight
+        return max(0.3, min(1.5, combined))
     }
 
     // MARK: - Gesture Processing
@@ -159,8 +303,9 @@ public final class GestureAnalyzer: ObservableObject {
         // Record to session
         session.recordEvent(event)
 
-        // Update our smoothed metrics
+        // Update our smoothed metrics and modifier tracking
         updateSmoothedMetrics(velocity: clampedVelocity, direction: direction, timestamp: now)
+        updateModifierTracking(timestamp: now)
 
         // Update scrolling state based on gesture state
         switch recognizer.state {
@@ -216,8 +361,9 @@ public final class GestureAnalyzer: ObservableObject {
 
         session.recordEvent(event)
 
-        // Update smoothed metrics
+        // Update smoothed metrics and modifier tracking
         updateSmoothedMetrics(velocity: clampedVelocity, direction: direction, timestamp: now)
+        updateModifierTracking(timestamp: now)
 
         return event
     }
@@ -234,12 +380,13 @@ public final class GestureAnalyzer: ObservableObject {
         let axisDifferenceThreshold: CGFloat = 50
 
         if abs(absVelocityX - absVelocityY) < axisDifferenceThreshold {
-            // Velocities are similar - use translation to determine
+            // Velocities are similar - use translation to determine direction
+            // In UIKit, negative translation.y means finger moved up = content scrolls down
             let absTranslationX = abs(translation.x)
             let absTranslationY = abs(translation.y)
 
             if absTranslationY > absTranslationX {
-                return translation.y < 0 ? .up : .down
+                return translation.y < 0 ? .down : .up
             } else if absTranslationX > absTranslationY {
                 return translation.x < 0 ? .left : .right
             }
@@ -248,7 +395,8 @@ public final class GestureAnalyzer: ObservableObject {
 
         if absVelocityY > absVelocityX {
             // Vertical scroll
-            // Note: negative velocity.y means scrolling down (content moves up)
+            // Note: In UIKit, negative velocity.y means finger is dragging upward,
+            // which scrolls content downward (user sees content scrolling "down")
             return velocity.y < 0 ? .down : .up
         } else {
             // Horizontal scroll
@@ -324,7 +472,12 @@ public final class GestureAnalyzer: ObservableObject {
         // Apply session duration multiplier
         // Longer sessions increase the intensity score
         let durationMultiplier = calculateDurationMultiplier(session: session)
-        let finalScore = min(1.0, weightedScore * durationMultiplier)
+
+        // Apply intensity modifiers (decay, reading, warmup, depth, late-night)
+        let intensityModifier = calculateCombinedModifier(session: session)
+
+        // Final score combines weighted score, duration, and all modifiers
+        let finalScore = min(1.0, weightedScore * durationMultiplier * intensityModifier)
 
         let intensity = ScrollIntensity(
             score: finalScore,
@@ -485,6 +638,11 @@ public final class GestureAnalyzer: ObservableObject {
         recentScrollTimes.removeAll()
         lastProcessTime = nil
         lastAnalyzedSession = nil
+
+        // Reset modifier tracking state
+        lastScrollEventTime = nil
+        readingPauseCount = 0
+        lastEventTimeForPause = nil
     }
 
     // MARK: - Utilities
@@ -527,9 +685,11 @@ extension GestureAnalyzer {
         let velocityMagnitude = sqrt(velocityX * velocityX + velocityY * velocityY)
 
         // Determine direction
+        // In SwiftUI DragGesture, negative velocityY means finger moving up,
+        // which scrolls content downward (same convention as UIKit)
         let direction: ScrollDirection
         if abs(velocityY) > abs(velocityX) {
-            direction = velocityY < 0 ? .up : .down
+            direction = velocityY < 0 ? .down : .up
         } else if abs(velocityX) > abs(velocityY) {
             direction = velocityX < 0 ? .left : .right
         } else {
