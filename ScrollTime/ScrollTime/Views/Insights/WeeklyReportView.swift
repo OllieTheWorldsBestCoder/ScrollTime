@@ -577,6 +577,12 @@ class WeeklyReportViewModel: ObservableObject {
     @Published var report: WeeklyReport?
     @Published var isLoading = false
 
+    private let reportGenerator: ReportGenerator
+
+    init(reportGenerator: ReportGenerator = .shared) {
+        self.reportGenerator = reportGenerator
+    }
+
     var shareText: String {
         guard let report = report else { return "" }
 
@@ -599,12 +605,22 @@ class WeeklyReportViewModel: ObservableObject {
     func loadReport() {
         isLoading = true
 
-        // Simulate async loading with a brief delay for the animation
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            // In production, this would load from StatsProvider
-            // For now, use sample data
-            self?.report = WeeklyReport.sample
-            self?.isLoading = false
+        Task {
+            // Generate fresh report from actual tracked data
+            await reportGenerator.generateReports()
+
+            // Get the current week's report
+            let generatedReport = reportGenerator.currentWeekReport
+
+            // Only show report if there's meaningful data (at least one session)
+            // Otherwise, leave report as nil to show empty state
+            if let generated = generatedReport, generated.dailyBreakdown.contains(where: { $0.sessionCount > 0 }) {
+                self.report = generated
+            } else {
+                self.report = nil
+            }
+
+            self.isLoading = false
         }
     }
 
